@@ -18,14 +18,13 @@ def load_app():
 	if request.method == "GET":
 		return render_template("homehtml.html", isithiddenvar='None')
 	if request.method == "POST":
-		weight = request.form["weight"]
+		weight = float(request.form["weight"])
 		food = request.form["food"].lower()
 		kilocalories, fuel_used = originscraper.main(weight, food)
-		fuel_used = fuel_used * int(weight)/112000000
+		fuel_used = fuel_used * weight/112000000
 		# this accounts for the fact a plane won't just be carrying one banana, it will be carrying a lot of food
 		# cargo weight of a boeing 747
 		cur = mysql.connection.cursor()
-		# fix thiss
 		cur.execute(f'''SELECT item FROM table1''')
 		items = cur.fetchall()
 		for it in items:
@@ -38,8 +37,8 @@ def load_app():
 		listvals = cur.fetchall()[0]
 		waterperunit = listvals['water']
 		energyperunit = listvals['energy']
-		water_used = waterperunit * kilocalories
-		energy_used = energyperunit * kilocalories
+		water_used = waterperunit * kilocalories * (weight/100)
+		energy_used = energyperunit * kilocalories * (weight/100)
 		waterequivalent = water_used/0.25
 		fuelequivalent = fuel_used/1.5
 		energyequivalent = energy_used/0.138
