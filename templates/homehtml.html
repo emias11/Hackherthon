@@ -1,11 +1,45 @@
+
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="homecss.css">
+<head>
+<link href="{{ url_for('static', filename='homecss.css') }}" type="text/css" rel="stylesheet">
+
+    <!--script defines function to add items to a list-->
+    <!---
+    <script>
+        function showInput() {
+            var para = document.createElement("P");
+            para.innerText = document.getElementById("user_input").value;
+            document.body.appendChild(para);
+        }
+    </script>
+       --->
+</head>
+
 <body>
 
-<h1>My This is a Heading</h1>
-<p>This is a paragraph!</p>
+<h1>What's the carbon footprint of my food?</h1>
 
+<!--form inputs: product search key and approximate weight-->
+<form action="/" id='form' method ="POST">
+    <label for="user_input">Type product name here:</label><br>
+    <input type="text" id="user_input" name="food"><br>
+    <label for="user_input1">Approximate weight:</label><br>
+    <input type="text" id="user_input1" name="weight"><br>
+    <p><input type="submit" value = "Submit"><br/></p>
+</form>
+
+
+<!--<p>Your shopping basket:</p>-->
+<div id = "hiddendiv" style="display:{{isithiddenvar}}">
+    <p>For {{weight}} grams of {{food}} ...</p>
+    <p>You used {{water_used}} litres of water.</p>
+    <p>This is equivalent to washing your hands {{waterequivalent}} times</p>
+    <p>You used {{fuel_used}} litres of fuel.</p>
+    <p>This is equivalent to driving from x to x {{fuelequivalent}} times</p>
+    <p>You used {{energy_used}} J of energy.</p>
+    <p>This is equivalent to charging your phone {{energyequivalent}} times</p>
+</div>
 </body>
 </html>
 
