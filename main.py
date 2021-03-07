@@ -16,22 +16,36 @@ mysql = MySQL(app)
 @app.route("/", methods=["GET", "POST"])
 def load_app():
 	if request.method == "GET":
-		print(request.args)
 		return render_template("homehtml.html", isithiddenvar='None')
 	if request.method == "POST":
 		weight = request.form["weight"]
-		food = request.form["food"]
+		food = request.form["food"].lower()
 		kilocalories, fuel_used = originscraper.main(weight, food)
-
+		fuel_used = fuel_used * int(weight)/112000000
+		# this accounts for the fact a plane won't just be carrying one banana, it will be carrying a lot of food
+		# takeoff weight of a boeing 747
 		cur = mysql.connection.cursor()
-		#fix this
-		cur.execute(f'''SELECT water, energy FROM table1 WHERE item="{food}"''')
+		# fix thiss
+		cur.execute(f'''SELECT item FROM table1''')
+		items = cur.fetchall()
+		for it in items:
+			str_it = it["item"].lower()
+			if str_it in food:
+				food_query = str_it
+			else:
+				food_query = "Fresh fruit"  # in case not listed in db, this is our backup value for other fresh food
+		cur.execute(f'''SELECT water, energy FROM table1 WHERE item="{food_query}"''')
 		listvals = cur.fetchall()[0]
 		waterperunit = listvals['water']
 		energyperunit = listvals['energy']
 		water_used = waterperunit * kilocalories
 		energy_used = energyperunit * kilocalories
-		return render_template("homehtml.html", water_used=water_used, energy_used=energy_used, fuel_used=fuel_used, isithiddenvar='Block', weight=weight, food=food)
+		waterequivalent = water_used/226.796
+		fuelequivalent = fuel_used/645.12
+		energyequivalent = energy_used/25000
+		return render_template("homehtml.html", water_used=water_used, energy_used=energy_used, fuel_used=fuel_used,
+							   isithiddenvar='Block', weight=weight, food=food, waterequivalent=waterequivalent, fuelequivalent=fuelequivalent, energyequivalent=energyequivalent)
+
 
 def main():
 	app.run(debug=True)
@@ -39,4 +53,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
