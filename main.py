@@ -23,7 +23,7 @@ def load_app():
 		kilocalories, fuel_used = originscraper.main(weight, food)
 		fuel_used = fuel_used * int(weight)/112000000
 		# this accounts for the fact a plane won't just be carrying one banana, it will be carrying a lot of food
-		# takeoff weight of a boeing 747
+		# cargo weight of a boeing 747
 		cur = mysql.connection.cursor()
 		# fix thiss
 		cur.execute(f'''SELECT item FROM table1''')
@@ -40,9 +40,9 @@ def load_app():
 		energyperunit = listvals['energy']
 		water_used = waterperunit * kilocalories
 		energy_used = energyperunit * kilocalories
-		waterequivalent = water_used/226.796
-		fuelequivalent = fuel_used/645.12
-		energyequivalent = energy_used/25000
+		waterequivalent = water_used/0.25
+		fuelequivalent = fuel_used/1.5
+		energyequivalent = energy_used/0.138
 		return render_template("homehtml.html", water_used=water_used, energy_used=energy_used, fuel_used=fuel_used,
 							   isithiddenvar='Block', weight=weight, food=food, waterequivalent=waterequivalent, fuelequivalent=fuelequivalent, energyequivalent=energyequivalent)
 

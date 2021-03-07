@@ -5,7 +5,7 @@ from urllib.parse import quote
 import regex as re
 import requests
 import pprint
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 
@@ -15,7 +15,7 @@ def getkilocandorigin(food):
 	options = Options()
 	options.headless = True
 	options.add_argument("--enable-javascript")
-	options.add_argument("--window-size=1920,1200")
+	#options.add_argument("--window-size=1920,1200")
 
 	driver = webdriver.Chrome(options=options, executable_path='chromedriver.exe')
 
